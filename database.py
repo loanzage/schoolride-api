@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 # 🔑 Paste your Supabase connection string here
-DATABASE_URL = "postgresql://postgres:Loanzage@*12@db.laezukqmsutahwmjcsyo.supabase.co:5432/postgres"
+DATABASE_URL =  "postgresql://postgres:Loanzage%40*12@db.laezukqmsutahwmjcsyo.supabase.co:5432/postgres"
 
 # Create engine (Supabase PostgreSQL)
 engine = create_engine(
