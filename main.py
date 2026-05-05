@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from database import SessionLocal
-from sqlalchemy import text
+from supabase_client import test_connection
 import joblib
 
 app = FastAPI()
 
 model = joblib.load("model.pkl")
+
 
 @app.get("/")
 def home():
@@ -27,15 +27,8 @@ def predict(data: dict):
 
 @app.get("/test-db")
 def test_db():
-    db = SessionLocal()
-    try:
-        db.execute(text("SELECT 1"))
-        return {"status": "Database connected successfully 🚍"}
-    except Exception as e:
-        print("DB ERROR:", e)
-        return {
-            "error": str(e),
-            "type": str(type(e))
-        }
-    finally:
-        db.close()  # ✅ correct position
+    status, response = test_connection()
+    return {
+        "status_code": status,
+        "response": response
+    }
