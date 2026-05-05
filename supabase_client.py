@@ -1,7 +1,7 @@
 import requests
 import os
 
-SUPABASE_URL = "https://db.laezukqmsutahwmjcsyo.supabase.co"
+SUPABASE_URL = "https://laezukqmsutahwmjcsyo.supabase.co"
 
 # For now we will use anon key (safe + enough for testing)
 SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY")
