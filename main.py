@@ -1,6 +1,6 @@
-# redeploy trigger
 from fastapi import FastAPI
 from database import SessionLocal
+from sqlalchemy import text
 import joblib
 
 app = FastAPI()
@@ -26,5 +26,14 @@ def predict(data: dict):
 @app.get("/test-db")
 def test_db():
     db = SessionLocal()
-    db.execute("SELECT 1")
-    return {"status": "Database connected successfully 🚍"}
+    try:
+        db.execute(text("SELECT 1"))
+        return {"status": "Database connected successfully 🚍"}
+    except Exception as e:
+        print("DB ERROR:", e)  # 👈 forces log output
+        return {
+            "error": str(e),
+            "type": str(type(e))
+        }
+        finally:
+        db.close()  # ✅ VERY IMPORTANT
