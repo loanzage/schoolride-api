@@ -3,7 +3,6 @@ import os
 
 SUPABASE_URL = "https://laezukqmsutahwmjcsyo.supabase.co"
 
-# For now we will use anon key (safe + enough for testing)
 SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY")
 
 headers = {
@@ -15,7 +14,7 @@ headers = {
 def test_connection():
     try:
         response = requests.get(
-            f"{SUPABASE_URL}/rest/v1/",
+            f"{SUPABASE_URL}/rest/v1/test?select=*",
             headers=headers
         )
         return response.status_code, response.text
