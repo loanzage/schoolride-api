@@ -11,6 +11,7 @@ model = joblib.load("model.pkl")
 def home():
     return {"message": "UPDATED VERSION 🚀"}
 
+
 @app.post("/predict")
 def predict(data: dict):
     input_data = [[
@@ -22,7 +23,8 @@ def predict(data: dict):
     ]]
     prediction = model.predict(input_data)
     return {"predicted_delay_minutes": float(prediction[0])}
-    
+
+
 @app.get("/test-db")
 def test_db():
     db = SessionLocal()
@@ -30,10 +32,10 @@ def test_db():
         db.execute(text("SELECT 1"))
         return {"status": "Database connected successfully 🚍"}
     except Exception as e:
-        print("DB ERROR:", e)  # 👈 forces log output
+        print("DB ERROR:", e)
         return {
             "error": str(e),
             "type": str(type(e))
         }
-        finally:
-        db.close()  # ✅ VERY IMPORTANT
+    finally:
+        db.close()  # ✅ correct position
