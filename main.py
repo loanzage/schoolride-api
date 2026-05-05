@@ -22,7 +22,7 @@ def predict(data: dict):
     prediction = model.predict(input_data)
     return {"predicted_delay_minutes": float(prediction[0])}
     
-    @app.get("/test-db")
+@app.get("/test-db")
 def test_db():
     db = SessionLocal()
     db.execute("SELECT 1")
