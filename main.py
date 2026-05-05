@@ -8,7 +8,7 @@ model = joblib.load("model.pkl")
 
 @app.get("/")
 def home():
-    return {"message": "SchoolRide API running 🚀"}
+    return {"message": "UPDATED VERSION 🚀"}
 
 @app.post("/predict")
 def predict(data: dict):
