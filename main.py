@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import joblib
+from ai_model import predict_delay
 import requests
 
 from supabase_client import (
@@ -9,10 +9,6 @@ from supabase_client import (
 )
 
 app = FastAPI()
-
-# Load ML model once at startup
-model = joblib.load("model.pkl")
-
 
 # =========================
 # HEADERS (Supabase Auth)
@@ -37,18 +33,16 @@ def home():
 # =========================
 @app.post("/predict")
 def predict(data: dict):
-    input_data = [[
+    delay = predict_delay(
         data["distance_km"],
         data["traffic_level"],
         data["stops"],
         data["weather"],
         data["departure_hour"]
-    ]]
-
-    prediction = model.predict(input_data)
+    )
 
     return {
-        "predicted_delay_minutes": float(prediction[0])
+        "predicted_delay_minutes": delay
     }
 
 
@@ -58,13 +52,24 @@ def predict(data: dict):
 @app.post("/create-trip")
 def create_trip(data: dict):
 
+    # 1. Run AI prediction
+    delay = predict_delay(
+        data.get("distance_km", 0),
+        data.get("traffic_level", 0),
+        data.get("stops", 0),
+        data.get("weather", 0),
+        data.get("departure_hour", 0)
+    )
+
+    # 2. Build payload (NOW includes delay)
     payload = {
         "driver_id": data["driver_id"],
         "child_id": data["child_id"],
         "pickup_location": data["pickup_location"],
         "dropoff_location": data["dropoff_location"],
         "departure_time": data.get("departure_time"),
-        "status": "scheduled"
+        "status": "scheduled",
+        "delay_minutes": delay
     }
 
     try:
@@ -76,7 +81,8 @@ def create_trip(data: dict):
 
         return {
             "status_code": response.status_code,
-            "response": response.text
+            "response": response.text,
+            "predicted_delay": delay
         }
 
     except Exception as e:
